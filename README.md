@@ -72,3 +72,44 @@ Your live URL will look like `https://chaosmonkey.onrender.com` (or similar).
 ### 5. Redeploys
 
 Every push to `main` triggers a new deploy if auto-deploy is on (default).
+
+## Share from your laptop (Cloudflare Tunnel)
+
+Use this for demos when Render is not needed. Your laptop runs the app; **Cloudflare** gives you a public HTTPS link (no router port forwarding).
+
+### One-time: install Cloudflare’s tunnel CLI
+
+On Windows (PowerShell):
+
+```powershell
+winget install Cloudflare.cloudflared
+```
+
+Or download `cloudflared` from [Cloudflare Zero Trust docs](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/).
+
+### Each demo session
+
+**Terminal 1** — app (from this folder):
+
+```powershell
+npm install
+npm run dev
+```
+
+Note the port (usually **5173**).
+
+**Terminal 2** — public URL (quick tunnel, no account required):
+
+```powershell
+cloudflared tunnel --url http://localhost:5173
+```
+
+Copy the `https://….trycloudflare.com` URL from the output and share it. Anyone with the link can use the app while both terminals stay open and your `.env` is present locally.
+
+For a stabler setup, use a [named tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/get-started/create-local-tunnel/) and a hostname on a domain you manage in Cloudflare.
+
+**Tips**
+
+- Keep the laptop awake and on Wi‑Fi; closing the laptop stops the demo.
+- Supabase backend is already public; only the UI is served from your machine.
+- For a production-like build locally: `npm run build` then `npm run preview` (port **4173**), and tunnel `http://localhost:4173` instead.

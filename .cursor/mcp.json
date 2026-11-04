@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "supabase": {
+      "url": "https://mcp.supabase.com/mcp"
+    },
+    "sodabase": {
+      "url": "https://sodabase.io/mcp"
+    }
+  }
+}

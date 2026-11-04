@@ -1,9 +1,32 @@
 # ny_hackathon
--
+
+## MCP setup (Cursor agent)
+
+This repo includes [`.cursor/mcp.json`](.cursor/mcp.json) so the agent can use **Supabase** and **Sodabase** during the hackathon.
+
+| Server | URL | What the agent can do |
+|--------|-----|------------------------|
+| **Supabase** | `https://mcp.supabase.com/mcp` | SQL, migrations, edge functions, docs search, advisors |
+| **Sodabase** | `https://sodabase.io/mcp` | Connect project, monitors, data-trust scans, inbox issues |
+
+**One-time steps in Cursor**
+
+1. **Reload MCP** — Settings → Tools & MCP (or restart Cursor) so both servers appear.
+2. **Authenticate Supabase** — open MCP for `supabase` and complete OAuth.
+3. **Authenticate Sodabase** — same for `sodabase` (browser sign-in with Supabase-linked account).
+4. **Link your hackathon project** — ask the agent to run Sodabase `connect_project` and pick your Supabase project ref.
+
+Optional: scope Supabase to one project by changing the URL to  
+`https://mcp.supabase.com/mcp?project_ref=YOUR_REF&features=database,docs,edge_functions`.
+
+**Hosting (Render)** — static Vite build for the React UI; Supabase hosts DB, Realtime, and Edge Functions. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` on Render.
+
+---
+
 # Project Directive: Build "ChaosMonkey" (Real-Time Chaos Engineering & Data Observability Game)
 
 ## 1. Project Overview & Core Mission
-Build "SchemaBreaker", a fully functional, real-time multiplayer web application where players compete in a simulated database reliability duel. 
+Build "ChaosMonkey", a fully functional, real-time multiplayer web application where players compete in a simulated database reliability duel. 
 - **The Attacker (Chaos Monkey)** triggers Supabase Edge Functions to inject anomalies, null spikes, and schema drift into a live PostgreSQL database.
 - **The Defender (DBA/SRE)** monitors real-time telemetry driven by Sodabase observability triggers, detects anomalies, and executes remediation Edge Functions to restore system health before a 3-minute timer expires.
 
@@ -74,4 +97,33 @@ Create a responsive React application with a role-selection screen ('Attacker' v
 4. **Phase 4:** Build the React components (Role Selector, Attacker Deck, Defender Radar, Live Health Gauge).
 5. **Phase 5:** Wire up Supabase Realtime subscriptions to sync state seamlessly between attacker actions and defender alerts.
 
+## How it works
 
+### Step 1: Join the Game Room
+Both players open the web app. One joins as the Attacker (Chaos Monkey) and the other as the Defender (Database Admin).
+
+### Step 2: The Chaos Phase (Attacker's Turn)
+The Attacker sees a control panel full of "Attack Buttons" designed to mess up a fake live database without crashing the entire server:
+
+- **"Inject Nulls":** Secretly floods 500 orders into the system with missing customer emails.
+- **"Type Mismatch":** Forces string text into a number field (e.g., writing "one hundred" instead of 100).
+- **"Column Eraser":** Simulates a broken code release that suddenly drops a required database column.
+
+The Attacker picks attacks strategically to try and sneak data corruption past the Defender and drop the system's Health Score to zero.
+
+### Step 3: Detection & Alerting (Behind the Scenes)
+The attack hits the Supabase database.
+
+Sodabase detects the bad data or broken structure within seconds.
+
+An Edge Function immediately pushes a live alert to the Defender's screen.
+
+### Step 4: Defense & Repair (Defender's Turn)
+The Defender sees their health bar drop and red alerts start flashing on their dashboard:
+
+- **The Radar View:** Shows which database table is under attack (e.g., transactions or user_profiles).
+- **Alert Details:** Sodabase tells them what went wrong (e.g., "Warning: Null value spike detected in column total_price").
+- **Fixing the Bug:** The Defender must quickly click the correct Remediation Action (like "Quarantine Bad Rows" or "Restore Schema Balance") to wipe out the corrupt data, stop the health bleed, and earn points based on how fast they reacted.
+
+### Step 5: Game Over
+A 3-minute timer runs out. If the Defender keeps the database health above 0%, they win! The app presents a final score showing Time-to-Detection and Data Cleaned.

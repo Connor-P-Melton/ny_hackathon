@@ -1,6 +1,6 @@
 # ny_hackathon
 -
-# Project Directive: Build "SchemaBreaker" (Real-Time Chaos Engineering & Data Observability Game)
+# Project Directive: Build "ChaosMonkey" (Real-Time Chaos Engineering & Data Observability Game)
 
 ## 1. Project Overview & Core Mission
 Build "SchemaBreaker", a fully functional, real-time multiplayer web application where players compete in a simulated database reliability duel. 
@@ -73,3 +73,5 @@ Create a responsive React application with a role-selection screen ('Attacker' v
 3. **Phase 3:** Implement the Supabase Edge Functions (`chaos-injector` and `sodabase-webhook-handler`) with proper CORS and environment variable bindings.
 4. **Phase 4:** Build the React components (Role Selector, Attacker Deck, Defender Radar, Live Health Gauge).
 5. **Phase 5:** Wire up Supabase Realtime subscriptions to sync state seamlessly between attacker actions and defender alerts.
+
+

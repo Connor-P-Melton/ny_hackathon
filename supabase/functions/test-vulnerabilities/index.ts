@@ -38,17 +38,17 @@ Deno.serve(async (req) => {
     let effects: string[] = []
 
     if (session.dataset === 'iphone_shop') {
-      await supabase.from('iphone_inventory').update({ model: '' }).eq('sku', 'IP16P-256-BLK')
-      await supabase.from('iphone_inventory').update({ units_in_stock: -24, display_order: 99 }).eq('sku', 'IP16P-256-BLK')
-      await supabase.from('iphone_inventory').update({ display_order: 0, list_price: -1 }).eq('sku', 'IP16-128-WHT')
-      await supabase.from('iphone_inventory').update({ units_in_stock: 0, model: '??? unknown SKU' }).eq('sku', 'IP15-128-BLU')
+      await supabase.from('iphone_inventory').update({ model: '' }).eq('sku', 'IPH-001')
+      await supabase.from('iphone_inventory').update({ units_in_stock: -24, display_order: 99 }).eq('sku', 'IPH-001')
+      await supabase.from('iphone_inventory').update({ display_order: 0, list_price: -1 }).eq('sku', 'IPH-002')
+      await supabase.from('iphone_inventory').update({ units_in_stock: 0, model: '??? unknown SKU' }).eq('sku', 'IPH-006')
       await supabase.from('iphone_sales').update({ buyer_email: null }).like('buyer_email', 'buyer%')
 
       effects = [
-        'iPhone 16 Pro lost its product name on the shelf',
-        'iPhone 16 Pro stock went negative (−24) and sorted last',
-        'iPhone 16 price corrupted (−$1) and jumped to top of list',
-        'iPhone 15 renamed to garbage text with zero stock',
+        'iPhone 16 Pro Max lost its product name on the shelf',
+        'iPhone 16 Pro Max stock went negative (−24) and sorted last',
+        'iPhone 16 Pro price corrupted (−$1) and jumped to top of list',
+        'iPhone 15 Blue renamed to garbage text with zero stock',
         'Recent orders lost buyer emails',
       ]
       slackSummary =
@@ -56,10 +56,10 @@ Deno.serve(async (req) => {
         `CRITICAL: iphone_sales buyer_email null spike; iphone_inventory has blank names, negative stock, and invalid prices.\n` +
         `Tables: iphone_inventory, iphone_sales · Check Slack for full Sodabase thread.`
     } else {
-      await supabase.from('shoe_inventory').update({ style: '' }).eq('sku', 'SH-AIR-10')
-      await supabase.from('shoe_inventory').update({ units_in_stock: -50, display_order: 99 }).eq('sku', 'SH-AIR-10')
-      await supabase.from('shoe_inventory').update({ display_order: 0, list_price: 99999 }).eq('sku', 'SH-TRAIL-9')
-      await supabase.from('shoe_inventory').update({ style: 'DISCONTINUED???', units_in_stock: 0 }).eq('sku', 'SH-CITY-8')
+      await supabase.from('shoe_inventory').update({ style: '' }).eq('sku', 'SHO-001')
+      await supabase.from('shoe_inventory').update({ units_in_stock: -50, display_order: 99 }).eq('sku', 'SHO-001')
+      await supabase.from('shoe_inventory').update({ display_order: 0, list_price: 99999 }).eq('sku', 'SHO-002')
+      await supabase.from('shoe_inventory').update({ style: 'DISCONTINUED???', units_in_stock: 0 }).eq('sku', 'SHO-003')
       await supabase.from('shoe_sales').update({ buyer_email: null }).like('buyer_email', 'buyer%')
 
       effects = [

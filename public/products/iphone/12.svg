@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="g11" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#9333ea"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="#0b1220"/>
+  <rect x="130" y="40" width="140" height="280" rx="24" fill="url(#g11)" stroke="#64748b" stroke-width="3"/>
+  <rect x="155" y="58" width="90" height="200" rx="8" fill="#020617" opacity="0.85"/>
+  <circle cx="200" cy="280" r="10" fill="#334155"/>
+  <text x="200" y="350" text-anchor="middle" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="13" font-weight="600">iPhone 13 mini</text>
+</svg>

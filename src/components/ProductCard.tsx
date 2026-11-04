@@ -1,5 +1,13 @@
 import { AlertTriangle, Package } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import type { StoreProduct } from '../lib/types'
+
+function fallbackForProduct(product: StoreProduct) {
+  const dataset = product.sku.startsWith('SHO') ? 'shoes' : 'iphone'
+  const num = parseInt(product.sku.split('-')[1] ?? '1', 10)
+  const idx = Number.isFinite(num) ? String(num).padStart(2, '0') : '01'
+  return `/products/${dataset}/${idx}.svg`
+}
 
 type Props = {
   product: StoreProduct
@@ -7,11 +15,17 @@ type Props = {
 }
 
 export function ProductCard({ product, tested }: Props) {
+  const fallback = fallbackForProduct(product)
+  const [imgSrc, setImgSrc] = useState(product.image_url ?? fallback)
+  useEffect(() => {
+    setImgSrc(product.image_url ?? fallback)
+  }, [product.id, product.image_url, fallback])
   const missingName = !product.name.trim()
   const badStock = product.units_in_stock < 0
   const zeroStock = product.units_in_stock === 0
   const badPrice = product.list_price < 0 || product.list_price > 5000
-  const corrupted = tested && (missingName || badStock || zeroStock || badPrice)
+  const corrupted =
+    missingName || badStock || badPrice || (tested && zeroStock)
 
   return (
     <article
@@ -20,10 +34,13 @@ export function ProductCard({ product, tested }: Props) {
       }`}
     >
       <div className="relative aspect-square bg-slate-950">
-        {product.image_url ? (
+        {imgSrc ? (
           <img
-            src={product.image_url}
+            src={imgSrc}
             alt={product.name || 'Product'}
+            referrerPolicy="no-referrer"
+            loading="lazy"
+            onError={() => setImgSrc(fallbackForProduct(product))}
             className={`size-full object-cover transition ${corrupted ? 'opacity-70 grayscale-[30%]' : ''}`}
           />
         ) : (

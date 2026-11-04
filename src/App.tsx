@@ -25,6 +25,7 @@ function App() {
   const [tested, setTested] = useState(false)
   const [showSlackPrompt, setShowSlackPrompt] = useState(false)
   const [slackSummary, setSlackSummary] = useState<string | null>(null)
+  const [testEffects, setTestEffects] = useState<string[]>([])
 
   const storeMeta = dataset ? STORES.find((s) => s.id === dataset) : null
   const { products, loading, refresh } = useStoreProducts(dataset)
@@ -50,6 +51,7 @@ function App() {
       setTested(false)
       setShowSlackPrompt(false)
       setSlackSummary(null)
+      setTestEffects([])
       await refresh()
       setStep('catalog')
     } catch (e) {
@@ -68,6 +70,7 @@ function App() {
       setTested(true)
       setShowSlackPrompt(true)
       setSlackSummary(result.slack_summary)
+      setTestEffects(result.effects ?? [])
       await refresh()
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Test failed')
@@ -142,7 +145,9 @@ function App() {
         <div>
           <p className="text-xs uppercase tracking-wider text-slate-500">Your store</p>
           <h1 className="text-2xl font-semibold">{storeMeta?.name}</h1>
-          <p className="text-sm text-slate-400">{playerName}&apos;s catalog · live from Supabase</p>
+          <p className="text-sm text-slate-400">
+            {playerName}&apos;s catalog · {products.length} products · live from Supabase
+          </p>
         </div>
         {!tested && (
           <button
@@ -180,11 +185,27 @@ function App() {
             </a>
             .
           </p>
+          {testEffects.length > 0 && (
+            <ul className="mt-3 list-inside list-disc space-y-1 text-sm text-slate-200">
+              {testEffects.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+          )}
           {slackSummary && (
             <pre className="mt-3 whitespace-pre-wrap rounded-lg bg-slate-950/60 p-3 text-xs text-slate-400">
               {slackSummary}
             </pre>
           )}
+          <p className="mt-3 text-xs text-slate-400">
+            Sodabase is still watching <strong className="text-slate-300">public.orders</strong> from
+            the first setup. This demo breaks{' '}
+            <strong className="text-slate-300">
+              {dataset === 'iphone_shop' ? 'iphone_inventory / iphone_sales' : 'shoe_inventory / shoe_sales'}
+            </strong>
+            . Turn on watching for those tables in Sodabase (see README) so Slack gets a new alert
+            with a fresh time.
+          </p>
         </div>
       )}
 
@@ -197,7 +218,7 @@ function App() {
       {loading ? (
         <p className="text-slate-500">Loading products…</p>
       ) : (
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} tested={tested} />
           ))}
